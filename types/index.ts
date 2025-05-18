@@ -12,6 +12,41 @@ export type Recipe = {
   user: User;
 };
 
+export type SavedRecipe = {
+  id: string;
+  user_id: string;
+  recipe_id: string;
+  created_at: string;
+  updated_at: string;
+  user: {
+    id: string;
+    name: string;
+    address: string;
+    email: string;
+    password: string;
+    created_at: string;
+    updated_at: string;
+  };
+  recipe: {
+    id: string;
+    user_id: string;
+    title: string;
+    content: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: null;
+    user: {
+      id: string;
+      name: string;
+      address: string;
+      email: string;
+      password: string;
+      created_at: string;
+      updated_at: string;
+    };
+  };
+};
+
 export type User = {
   id: string;
   name: string;

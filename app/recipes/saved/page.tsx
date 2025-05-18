@@ -20,28 +20,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 
 import useSWR from "swr";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-import { Recipe } from "@/types/index";
-import { Eye, Plus, Bookmark } from "lucide-react";
-
-import RecipeFormContainer from "@/container/RecipeFormContainer";
+import { SavedRecipe } from "@/types/index";
+import { ArrowBigLeft, Eye } from "lucide-react";
 
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((res) => res.json());
-
-export default function Recipes() {
+export default function SavedRecipes() {
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [Loading, setLoading] = useState<boolean>(false);
-  const [showCreate, setShowCreate] = useState<boolean>(false);
 
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/recipes?page=${currentPage}`,
+    `/api/recipes/saved?page=${currentPage}`,
     fetcher,
     {
       refreshInterval: 10000,
@@ -58,26 +52,18 @@ export default function Recipes() {
     <>
       <div
         className={`fixed inset-0 z-99 flex items-center justify-center bg-black/50 ${
-          Loading ? "" : "hidden"
+          isLoading ? "" : "hidden"
         }`}
       >
         <div className="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin" />
       </div>
 
       <Card className="container flex justify-between flex-row p-6">
-        <h1 className="text-center font-bold text-2xl">LIST RECIPES</h1>
+        <h1 className="text-center font-bold text-2xl">LIST SAVED RECIPES</h1>
         <div className="btn-container flex gap-4">
-          <Button
-            onClick={() => {
-              setShowCreate(!showCreate);
-            }}
-          >
-            <Plus size={48} /> Tambah Resep
-          </Button>
-
-          <Link href="/recipes/saved">
+          <Link href="/recipes">
             <Button>
-              <Bookmark size={48} /> Resep Tersimpan
+              <ArrowBigLeft size={48} /> Back
             </Button>
           </Link>
         </div>
@@ -96,8 +82,6 @@ export default function Recipes() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px]">Title</TableHead>
-                    <TableHead>Total Like</TableHead>
-                    <TableHead>Total Comment</TableHead>
                     <TableHead>Dibuat Pada</TableHead>
                     <TableHead>Dibuat Oleh</TableHead>
                     <TableHead>Action</TableHead>
@@ -105,26 +89,26 @@ export default function Recipes() {
                 </TableHeader>
                 <TableBody>
                   {data?.recipes?.data &&
-                    data.recipes.data.map((recipe: Recipe, index: number) => (
-                      <TableRow key={index}>
-                        <TableCell>{recipe.title}</TableCell>
-                        <TableCell>{recipe.likes_count}</TableCell>
-                        <TableCell>{recipe.comments_count}</TableCell>
-                        <TableCell>{recipe.created_at}</TableCell>
-                        <TableCell>{recipe?.user?.name}</TableCell>
-                        <TableCell>
-                          <Link href={`recipes/${recipe.id}`}>
-                            <Eye size={24} />
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    data.recipes.data.map(
+                      (recipe: SavedRecipe, index: number) => {
+                        return (
+                          <TableRow key={index}>
+                            <TableCell>{recipe.recipe.title}</TableCell>
+                            <TableCell>{recipe.recipe.created_at}</TableCell>
+                            <TableCell>{recipe.recipe.user.name}</TableCell>
+                            <TableCell>
+                              <Link href={`/recipes/${recipe.recipe.id}`}>
+                                <Eye size={24} />
+                              </Link>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }
+                    )}
                 </TableBody>
                 <TableFooter>
                   <TableRow>
                     <TableHead className="w-[100px]">Title</TableHead>
-                    <TableHead>Total Like</TableHead>
-                    <TableHead>Total Comment</TableHead>
                     <TableHead>Dibuat Pada</TableHead>
                     <TableHead>Dibuat Oleh</TableHead>
                     <TableHead>Action</TableHead>
@@ -154,20 +138,6 @@ export default function Recipes() {
           </Pagination>
         </Card>
       )}
-
-      <Drawer open={showCreate} onOpenChange={setShowCreate}>
-        <DrawerContent>
-          <DrawerHeader>
-            <RecipeFormContainer
-              onFinished={() => {
-                setShowCreate(false);
-                mutate();
-              }}
-              setLoading={setLoading}
-            />
-          </DrawerHeader>
-        </DrawerContent>
-      </Drawer>
     </>
   );
 }

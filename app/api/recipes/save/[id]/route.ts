@@ -19,7 +19,7 @@ export async function GET(
     }
 
     const res = await fetch(
-      `https://service.pace11.my.id/api/like/recipe/${id}`,
+      `https://service.pace11.my.id/api/recipe/save/${id}`,
       {
         method: "POST",
         headers: {
@@ -30,7 +30,7 @@ export async function GET(
 
     if (!res.ok) {
       return NextResponse.json(
-        { message: "Gagal Like Data!" },
+        { message: "Gagal Save Resep!" },
         { status: res.status }
       );
     }
@@ -38,7 +38,7 @@ export async function GET(
     const recipe = await res.json();
 
     return NextResponse.json(
-      { message: "Berhasil Like Data!", data: recipe.data },
+      { message: "Berhasil Save Resep!", data: recipe.data },
       { status: 200 }
     );
   } catch (error) {

@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LikeButton } from "@/component/likebutton";
+import { SaveButton } from "@/component/savebutton";
+import { Button } from "@/components/ui/button";
+import { ArrowBigLeft } from "lucide-react";
+import Link from "next/link";
+
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((res) => res.json());
 
@@ -26,19 +31,36 @@ export default function RecipeDetail({ params }: { params: { id: string } }) {
 
   return (
     <>
+      <Link href="/recipes">
+        <Button className="mb-3">
+          <ArrowBigLeft size={48} />
+          Back
+        </Button>
+      </Link>
       {isLoading ? "Loading..." : ""}
       {data?.data && (
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl flex items-center gap-4">
               {data.data.title.toUpperCase()}
-              <LikeButton
-                defaultLiked={data.data.is_liked_by_me}
-                id={data.data.id}
-                onLiked={() => {
-                  mutate();
-                }}
-              />
+              <Button>
+                <LikeButton
+                  defaultLiked={data.data.is_liked_by_me}
+                  id={data.data.id}
+                  onLiked={() => {
+                    mutate();
+                  }}
+                />
+              </Button>
+
+              <Button>
+                <SaveButton
+                  id={data.data.id}
+                  onSaved={() => {
+                    mutate();
+                  }}
+                />
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>

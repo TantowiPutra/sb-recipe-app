@@ -13,16 +13,15 @@ export function LikeButton({
   const [isLiked, setIsLiked] = useState(defaultLiked);
 
   const handleClick = async () => {
-    const newLiked = !isLiked;
-    setIsLiked(newLiked);
-    await updateIsLiked(newLiked);
+    await updateIsLiked();
     onLiked();
   };
 
-  const updateIsLiked = async (liked: boolean) => {
+  const updateIsLiked = async () => {
     let res: Response;
+    const newLiked = !isLiked;
 
-    if (liked) {
+    if (newLiked) {
       res = await fetch(`/api/recipes/like/${id}`);
     } else {
       res = await fetch(`/api/recipes/dislike/${id}`);
@@ -30,6 +29,7 @@ export function LikeButton({
 
     if (res.ok) {
       alert("Berhasil Like/Unlike Resep!");
+      setIsLiked(newLiked);
     } else {
       alert("Gagal Like/Unlike Resep!");
     }

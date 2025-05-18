@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { id } = await context.params;
+    const searchParams = req.nextUrl.searchParams;
+    const page = Number(searchParams.get("page")) + 1;
 
     const cookieStore = await cookies();
     const token = cookieStore.get("loginToken");
@@ -19,9 +18,9 @@ export async function GET(
     }
 
     const res = await fetch(
-      `https://service.pace11.my.id/api/like/recipe/${id}`,
+      `https://service.pace11.my.id/api/recipe/saves?page=${page}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
@@ -30,19 +29,19 @@ export async function GET(
 
     if (!res.ok) {
       return NextResponse.json(
-        { message: "Gagal Like Data!" },
+        { message: "Gagal Fetching Data" },
         { status: res.status }
       );
     }
 
-    const recipe = await res.json();
+    const data = await res.json();
 
     return NextResponse.json(
-      { message: "Berhasil Like Data!", data: recipe.data },
+      { message: "Berhasil Fetching Data!", recipes: data },
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error =>", error);
+    console.log("Error => ", error);
     return NextResponse.json(
       { message: "Something Went Wrong!" },
       { status: 500 }
