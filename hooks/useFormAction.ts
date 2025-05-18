@@ -14,8 +14,14 @@ export const recipeFormSchema = z.object({
   title: z.string().min(1),
 });
 
+export const commentFormSchema = z.object({
+  id: z.string().min(1),
+  comment: z.string().min(1),
+});
+
 export type loginFormType = z.infer<typeof loginFormSchema>;
 export type recipeFormType = z.infer<typeof recipeFormSchema>;
+export type commentFormType = z.infer<typeof commentFormSchema>;
 
 export default function useFormActionLogin({
   values,
@@ -46,6 +52,24 @@ export function useFormActionRecipe({ values }: { values?: recipeFormType }) {
       id: "",
       content: "",
       title: "",
+    },
+  });
+
+  useEffect(() => {
+    if (values && Object.keys(values).length > 0) {
+      form.reset(values);
+    }
+  }, [values, form]);
+
+  return { form };
+}
+
+export function useFormActionComment({ values }: { values?: commentFormType }) {
+  const form = useForm<commentFormType>({
+    resolver: zodResolver(commentFormSchema),
+    defaultValues: {
+      id: "",
+      comment: "",
     },
   });
 

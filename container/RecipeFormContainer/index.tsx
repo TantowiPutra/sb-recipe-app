@@ -102,10 +102,10 @@ export default function RecipeFormContainer({
                   <FormLabel>CONTENT</FormLabel>
                   <FormControl>
                     <textarea
-                      {...field} // Use field methods for input binding
-                      value={field.value || ""} // Ensure the value is always a string (not null or undefined)
+                      {...field}
+                      value={field.value || ""}
                       placeholder="Masukkan Content"
-                      rows={5} // You can adjust the number of rows as needed
+                      rows={5}
                       className="border p-2 w-full rounded-md"
                     />
                   </FormControl>

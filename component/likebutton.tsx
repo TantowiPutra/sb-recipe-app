@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function LikeButton({
   defaultLiked,
@@ -36,8 +37,8 @@ export function LikeButton({
   };
 
   return (
-    <button onClick={handleClick}>
+    <Button onClick={handleClick}>
       <Heart className={isLiked ? "fill-red-500" : ""} />
-    </button>
+    </Button>
   );
 }

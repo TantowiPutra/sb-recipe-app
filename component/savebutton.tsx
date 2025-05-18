@@ -1,5 +1,6 @@
 import { Bookmark } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function SaveButton({
   id,
@@ -27,8 +28,8 @@ export function SaveButton({
   };
 
   return (
-    <button onClick={handleClick}>
+    <Button onClick={handleClick}>
       <Bookmark className={isSaved ? "fill-yellow-500" : ""} />
-    </button>
+    </Button>
   );
 }
