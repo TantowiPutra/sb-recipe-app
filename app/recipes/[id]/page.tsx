@@ -7,8 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LikeButton } from "@/component/likebutton";
 import { SaveButton } from "@/component/savebutton";
 import { Button } from "@/components/ui/button";
-import { ArrowBigLeft } from "lucide-react";
+import { ArrowBigLeft, Trash } from "lucide-react";
 import Link from "next/link";
+
+import { useRouter } from "next/navigation"; // <== ini penting
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((res) => res.json());
@@ -16,6 +24,27 @@ const fetcher = (...args: Parameters<typeof fetch>) =>
 export default function RecipeDetail({ params }: { params: { id: string } }) {
   const [Loading, setLoading] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`/api/recipes/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        alert("Resep berhasil dihapus!");
+        router.push("/recipes");
+      } else {
+        const body = await res.json();
+        alert(body.message || "Gagal menghapus resep.");
+      }
+    } catch (error) {
+      console.error("Error deleting resep", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchParams = async () => {
@@ -66,6 +95,30 @@ export default function RecipeDetail({ params }: { params: { id: string } }) {
                   mutate();
                 }}
               />
+
+              <Popover>
+                <PopoverTrigger>
+                  <Button className="bg-red-400">
+                    <Trash />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <h4 className="font-medium leading-none">Konfirmasi</h4>
+                  <div className="text-sm text-muted-foreground">
+                    Konfirmasi Delete Resep Ini?
+                    <div className="gap-4 mt-3 flex">
+                      <Button
+                        onClick={() => {
+                          setLoading(true);
+                          handleDelete();
+                        }}
+                      >
+                        Ya
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </CardTitle>
           </CardHeader>
           <CardContent>

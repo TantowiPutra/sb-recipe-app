@@ -141,7 +141,7 @@ export default function CommentContainer({
                     <div className="grid gap-4">
                       <div className="space-y-2">
                         <h4 className="font-medium leading-none">Konfirmasi</h4>
-                        <p className="text-sm text-muted-foreground">
+                        <div className="text-sm text-muted-foreground">
                           Konfirmasi Delete Comment Ini?
                           <div className="gap-4 mt-3 flex">
                             <Button
@@ -153,7 +153,7 @@ export default function CommentContainer({
                               Ya
                             </Button>
                           </div>
-                        </p>
+                        </div>
                       </div>
                     </div>
                   </PopoverContent>

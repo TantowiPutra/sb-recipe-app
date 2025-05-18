@@ -19,9 +19,17 @@ export const commentFormSchema = z.object({
   comment: z.string().min(1),
 });
 
+export const updateProfileFormSchema = z.object({
+  address: z.string().min(1),
+  email: z.string().min(1),
+  name: z.string().min(1),
+  password: z.string().min(1),
+});
+
 export type loginFormType = z.infer<typeof loginFormSchema>;
 export type recipeFormType = z.infer<typeof recipeFormSchema>;
 export type commentFormType = z.infer<typeof commentFormSchema>;
+export type updateProfileType = z.infer<typeof updateProfileFormSchema>;
 
 export default function useFormActionLogin({
   values,
@@ -44,7 +52,6 @@ export default function useFormActionLogin({
 
   return { form };
 }
-
 export function useFormActionRecipe({ values }: { values?: recipeFormType }) {
   const form = useForm<recipeFormType>({
     resolver: zodResolver(recipeFormSchema),
@@ -63,13 +70,36 @@ export function useFormActionRecipe({ values }: { values?: recipeFormType }) {
 
   return { form };
 }
-
 export function useFormActionComment({ values }: { values?: commentFormType }) {
   const form = useForm<commentFormType>({
     resolver: zodResolver(commentFormSchema),
     defaultValues: {
       id: "",
       comment: "",
+    },
+  });
+
+  useEffect(() => {
+    if (values && Object.keys(values).length > 0) {
+      form.reset(values);
+    }
+  }, [values, form]);
+
+  return { form };
+}
+
+export function useFormActionUpdateProfile({
+  values,
+}: {
+  values?: updateProfileType;
+}) {
+  const form = useForm<updateProfileType>({
+    resolver: zodResolver(updateProfileFormSchema),
+    defaultValues: {
+      address: "",
+      email: "",
+      name: "",
+      password: "",
     },
   });
 
