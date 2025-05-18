@@ -8,7 +8,14 @@ export const loginFormSchema = z.object({
   password: z.string().min(1),
 });
 
+export const recipeFormSchema = z.object({
+  id: z.string().optional(),
+  content: z.string().min(1),
+  title: z.string().min(1),
+});
+
 export type loginFormType = z.infer<typeof loginFormSchema>;
+export type recipeFormType = z.infer<typeof recipeFormSchema>;
 
 export default function useFormActionLogin({
   values,
@@ -20,6 +27,25 @@ export default function useFormActionLogin({
     defaultValues: {
       email: "",
       password: "",
+    },
+  });
+
+  useEffect(() => {
+    if (values && Object.keys(values).length > 0) {
+      form.reset(values);
+    }
+  }, [values, form]);
+
+  return { form };
+}
+
+export function useFormActionRecipe({ values }: { values?: recipeFormType }) {
+  const form = useForm<recipeFormType>({
+    resolver: zodResolver(recipeFormSchema),
+    defaultValues: {
+      id: "",
+      content: "",
+      title: "",
     },
   });
 

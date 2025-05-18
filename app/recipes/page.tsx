@@ -20,6 +20,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+
 import useSWR from "swr";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -27,11 +30,16 @@ import Link from "next/link";
 import { Recipe } from "@/types/index";
 import { Eye } from "lucide-react";
 
+import RecipeFormContainer from "@/container/RecipeFormContainer";
+
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((res) => res.json());
 
 export default function Recipes() {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [Loading, setLoading] = useState<boolean>(false);
+  const [showCreate, setShowCreate] = useState<boolean>(false);
+
   const { data, error, isLoading, mutate } = useSWR(
     `/api/recipes?page=${currentPage}`,
     fetcher,
@@ -48,8 +56,23 @@ export default function Recipes() {
 
   return (
     <>
-      <Card className="container flex justify-between">
+      <div
+        className={`fixed inset-0 z-99 flex items-center justify-center bg-black/50 ${
+          Loading ? "" : "hidden"
+        }`}
+      >
+        <div className="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin" />
+      </div>
+
+      <Card className="container flex justify-between flex-row p-6">
         <h1 className="text-center font-bold text-2xl">LIST RECIPES</h1>
+        <Button
+          onClick={() => {
+            setShowCreate(!showCreate);
+          }}
+        >
+          Tambah Resep
+        </Button>
       </Card>
 
       {isLoading ? (
@@ -123,6 +146,20 @@ export default function Recipes() {
           </Pagination>
         </Card>
       )}
+
+      <Drawer open={showCreate} onOpenChange={setShowCreate}>
+        <DrawerContent>
+          <DrawerHeader>
+            <RecipeFormContainer
+              onFinished={() => {
+                setShowCreate(false);
+                mutate();
+              }}
+              setLoading={setLoading}
+            />
+          </DrawerHeader>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
