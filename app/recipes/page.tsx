@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -21,8 +22,10 @@ import {
 
 import useSWR from "swr";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import { Recipe } from "@/types/index";
+import { Eye } from "lucide-react";
 
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((res) => res.json());
@@ -45,7 +48,7 @@ export default function Recipes() {
 
   return (
     <>
-      <Card className="container">
+      <Card className="container flex justify-between">
         <h1 className="text-center font-bold text-2xl">LIST RECIPES</h1>
       </Card>
 
@@ -66,22 +69,36 @@ export default function Recipes() {
                     <TableHead>Total Comment</TableHead>
                     <TableHead>Dibuat Pada</TableHead>
                     <TableHead>Dibuat Oleh</TableHead>
+                    <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {data?.recipes?.data &&
                     data.recipes.data.map((recipe: Recipe, index: number) => (
                       <TableRow key={index}>
-                        <TableCell className="font-medium">
-                          {recipe.title}
-                        </TableCell>
+                        <TableCell>{recipe.title}</TableCell>
                         <TableCell>{recipe.likes_count}</TableCell>
                         <TableCell>{recipe.comments_count}</TableCell>
                         <TableCell>{recipe.created_at}</TableCell>
                         <TableCell>{recipe?.user?.name}</TableCell>
+                        <TableCell>
+                          <Link href={`recipes/${recipe.id}`}>
+                            <Eye size={24} />
+                          </Link>
+                        </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Title</TableHead>
+                    <TableHead>Total Like</TableHead>
+                    <TableHead>Total Comment</TableHead>
+                    <TableHead>Dibuat Pada</TableHead>
+                    <TableHead>Dibuat Oleh</TableHead>
+                    <TableHead>Action</TableHead>
+                  </TableRow>
+                </TableFooter>
               </Table>
             )}
           </CardContent>
