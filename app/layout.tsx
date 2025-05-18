@@ -43,7 +43,7 @@ export default function RootLayout({
                     <li>
                       <Link
                         className="flex gap-2 bg-slate-400 p-3 rounded-sm shadow-md font-semibold"
-                        href="#"
+                        href="/recipes"
                       >
                         <Home /> Home
                       </Link>
@@ -51,7 +51,7 @@ export default function RootLayout({
                     <li>
                       <Link
                         className="flex gap-2 bg-slate-400 p-3 rounded-sm shadow-md font-semibold"
-                        href="#"
+                        href="/profile"
                       >
                         <User />
                         Profile
@@ -60,7 +60,7 @@ export default function RootLayout({
                     <li>
                       <Link
                         className="flex gap-2 bg-slate-400 p-3 rounded-sm shadow-md font-semibold"
-                        href="#"
+                        href="/notifications"
                       >
                         <Bell />
                         Notifications

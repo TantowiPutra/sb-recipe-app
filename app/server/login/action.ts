@@ -75,9 +75,9 @@ export async function Login(
 
     cookieStore.set("loginToken", loginToken, {
       path: "/",
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
-      maxAge: 60 * 60,
+      maxAge: 60 * 60 * 60,
     });
 
     return {

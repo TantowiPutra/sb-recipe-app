@@ -38,7 +38,7 @@ export const initialState: FormState = {
   isSuccess: null,
 };
 
-export default function Register() {
+export default function LoginPage() {
   const { form } = useFormActionLogin({});
   const [Loading, setLoading] = useState<boolean>(false);
 
@@ -69,8 +69,10 @@ export default function Register() {
         <Form {...form}>
           <div>
             <Hamburger size={100} className="block mx-auto" />
+            <h1 className="text-center font-bold">LOGIN</h1>
+            <p className="text-center">RecipeApp</p>
             <form
-              className="space-y-6"
+              className="space-y-6 mt-3"
               action={formAction}
               onSubmit={() => {
                 setLoading(true);
